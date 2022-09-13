@@ -129,7 +129,8 @@ function changeGameStatud(character){
     gameConfig.status= "play";
   }
   if(gameConfig.status==="gameover" && keyDown(control.revive)) {
-    gameConfig.status= "start";        
+    gameConfig.status= "gameover";
+    mario_gameover.play();        
   }
 }
 
@@ -221,6 +222,7 @@ function getCoins(coin,character){
   if( character.overlap(coin) && character.live && coin.get==false){
     character.coins+=1;
     coin.get=true;
+    mario_coin.play();
   };
 }
     
@@ -309,7 +311,8 @@ function manualControl(character){
 /* Movements of character */
 function jumping(character){
 	if( (noseY < 200 &&character.live) || (touchIsDown&&character.live) ){
-		character.velocity.y+=gameConfig.jump;
+		mario_jump.play();
+    character.velocity.y+=gameConfig.jump;
 	}
 }
 
@@ -358,6 +361,7 @@ function StepOnEnemy(obj1,obj2){
 	if(obj1_Right>=obj2_Left&&obj1_Left<=obj2_Right && obj1_Down<=obj2_Up+7 && obj1_Down>=obj2_Up-7 && obj2.live==true && obj2.touching.top){
 		obj2.live=false;
     obj1.killing=30;
+    mario_kick.play();
     obj1.kills++;
     if(obj1.velocity.y>=gameConfig.jump*0.8){
       obj1.velocity.y=gameConfig.jump*0.8;
@@ -403,12 +407,16 @@ function reviveAfterMusic(character){
 }
 
 
-/* Make character stay in screen */
+/* Make character stay in screen */ 
 function dontGetOutOfScreen(character){
   
   //if mario drop in the holes 
   if(character.position.y>gameConfig.screenY&&character.live && character==mario){
   	die(mario);
+    if(character.liveNumber > 0)
+    {
+      mario_die.play();
+    }
   }
 
   if(character.position.x>gameConfig.screenX-(character.width*0.5)){
